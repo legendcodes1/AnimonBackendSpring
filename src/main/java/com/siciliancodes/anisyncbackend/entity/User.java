@@ -1,57 +1,63 @@
 package com.siciliancodes.anisyncbackend.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 @Entity
-@Table(name = "users") // avoids SQL keyword conflict
+@Table(name = "users")
+@Data                    // Lombok: generates getters, setters, toString, equals, hashCode
+@NoArgsConstructor       // Lombok: no-arg constructor for JPA
+@AllArgsConstructor      // Lombok: all-args constructor
+@Builder
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(name = "password_hash")
+    private String passwordHash;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    // Required by JPA
-    protected User() {}
+    @Column(columnDefinition = "INTEGER DEFAULT 1")
+    private Integer level = 1;
 
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password; // hash later
-        this.email = email;
-    }
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    private Integer xp = 0;
 
-    // Getters
-    public UUID getId() {
-        return id;
-    }
+    @Column(name = "current_streak", columnDefinition = "INTEGER DEFAULT 0")
+    private Integer currentStreak = 0;
 
-    public String getUsername() {
-        return username;
-    }
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
-    public String getEmail() {
-        return email;
-    }
+    @Column(name = "last_watch_date")
+    private LocalDate lastWatchDate;
 
-    // Setters (optional but common)
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;  // ✅ This is correct
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+
+
 }
