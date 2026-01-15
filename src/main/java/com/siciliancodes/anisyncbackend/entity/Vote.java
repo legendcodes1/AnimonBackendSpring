@@ -1,41 +1,69 @@
 package com.siciliancodes.anisyncbackend.entity;
-import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
+
+// Composite Key Class
+@Embeddable
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+class VoteId implements Serializable {
+    @Column(name = "nomination_id")
+    private UUID nominationId;
+
+    @Column(name = "user_id")
+    private UUID userId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VoteId voteId = (VoteId) o;
+        return Objects.equals(nominationId, voteId.nominationId) &&
+                Objects.equals(userId, voteId.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nominationId, userId);
+    }
+}
 
 @Entity
+@Table(name = "votes")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Vote {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId  // ✅ Composite primary key
+    private VoteId id;
 
-    private Integer stars;
-    private String review;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("nominationId")  // ✅ Maps to nominationId in composite key
+    @JoinColumn(name = "nomination_id")
+    private Nomination nomination;  // ✅ What they're voting on
 
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")  // ✅ Maps to userId in composite key
+    @JoinColumn(name = "user_id")
+    private User user;  // ✅ Who is voting
 
-    @ManyToOne
-    @JoinColumn(name = "anime_id")
-    private Anime anime;
+    @Column(name = "vote_type", length = 10, nullable = false)
+    private String voteType;  // ✅ 'upvote', 'downvote', 'veto'
 
-    protected Vote() {}
-
-    public Vote(Integer stars, String review, Group group, Anime anime) {
-        this.stars = stars;
-        this.review = review;
-        this.group = group;
-        this.anime = anime;
-    }
-
-    public Integer getStars() {
-        return stars;
-    }
-
-    public String getReview() {
-        return review;
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }
