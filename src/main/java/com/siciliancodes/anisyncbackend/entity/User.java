@@ -44,6 +44,9 @@ public class User {
     @Column(name = "current_streak", columnDefinition = "INTEGER DEFAULT 0")
     private Integer currentStreak = 0;
 
+    @Column(name = "longest_streak")
+    private Integer longestStreak = 0;  // ✅ Stored in DB
+
     @Column(name = "avatar_url")
     private String avatarUrl;
 
@@ -57,7 +60,6 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 
 
 }
