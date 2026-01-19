@@ -17,7 +17,7 @@ import java.util.UUID;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;  // ✅ Need this to get User
+    private final UserRepository userRepository;  //  Need this to get User
 
     @Transactional
     public Group createGroup(String name, String description, String avatarUrl, UUID createdByUserId) {
