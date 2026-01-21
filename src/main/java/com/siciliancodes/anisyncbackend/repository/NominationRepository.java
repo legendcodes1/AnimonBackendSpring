@@ -9,6 +9,12 @@ import java.util.UUID;
 
 @Repository
 public interface NominationRepository extends JpaRepository<Nomination, UUID> {
+
     List<Nomination> findByVotingSessionId(UUID votingSessionId);
-    boolean existsByVotingSessionIdAndAnimeId(UUID sessionId, String animeId);
+
+    boolean existsByVotingSessionIdAndAnimeId(UUID votingSessionId, String animeId);
+
+    List<Nomination> findByNominatedById(UUID userId);
+
+    long countByVotingSessionId(UUID votingSessionId);
 }
