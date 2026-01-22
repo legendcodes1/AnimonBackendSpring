@@ -1,0 +1,21 @@
+package com.siciliancodes.anisyncbackend.dto.request;
+
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+import java.util.UUID;
+
+@Data
+public class CastVoteRequest {
+
+    @NotNull(message = "Nomination ID is required")
+    private UUID nominationId;
+
+    @NotNull(message = "User ID is required")
+    private UUID userId;
+
+    @NotBlank(message = "Vote type is required")
+    private String voteType;  // "upvote", "downvote", "veto"
+}

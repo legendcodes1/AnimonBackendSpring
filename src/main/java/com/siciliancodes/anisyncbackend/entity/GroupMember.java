@@ -6,22 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class GroupMemberId implements Serializable {
-    @Column(name = "group_id")
-    private UUID groupId;
 
-    @Column(name = "user_id")
-    private UUID userId;
-}
 
 @Entity
 @Table(name = "group_members")
