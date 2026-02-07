@@ -7,37 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
-// Composite Key Class
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class VoteId implements Serializable {
-    @Column(name = "nomination_id")
-    private UUID nominationId;
-
-    @Column(name = "user_id")
-    private UUID userId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VoteId voteId = (VoteId) o;
-        return Objects.equals(nominationId, voteId.nominationId) &&
-                Objects.equals(userId, voteId.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(nominationId, userId);
-    }
-}
 
 @Entity
 @Table(name = "votes")

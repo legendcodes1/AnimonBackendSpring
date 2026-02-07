@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_achievements")
+@Table(name = "user_achievements",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "achievement_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserAchievement {
+public class UserAchievements {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,14 +28,9 @@ public class UserAchievement {
     private User user;
 
     @Column(name = "achievement_id", nullable = false, length = 50)
-    private String achievementId;
-    //references a predefined achievement (like "first_watch")
+    private String achievementId;  // references a predefined achievement (like "first_watch")
 
     @CreationTimestamp
     @Column(name = "unlocked_at")
     private LocalDateTime unlockedAt;
-
-    // Add unique constraint so user can't unlock same achievement twice
-    @Table(name = "user_achievements",
-            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "achievement_id"}))
 }

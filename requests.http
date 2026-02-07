@@ -1,2 +1,140 @@
-### GET request to example server
-GET http://localhost:8080/api/
+### Variables
+@baseUrl = http://localhost:8080/api
+@authToken = YOUR_JWT_TOKEN_HERE
+
+### Health Check
+GET {{baseUrl}}/
+
+###############################################
+# USER ENDPOINTS
+###############################################
+
+### 1. Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123",
+  "avatarUrl": "https://i.pravatar.cc/150?img=1"
+}
+
+### 2. Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 3. Get Current User Profile (needs auth)
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{authToken}}
+
+### 4. Get User by ID
+GET {{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer {{authToken}}
+
+### 5. Update User Profile
+PUT {{baseUrl}}/users/me
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "avatarUrl": "https://i.pravatar.cc/150?img=2"
+}
+
+###############################################
+# GROUP ENDPOINTS
+###############################################
+
+### 6. Create a Group
+POST {{baseUrl}}/groups
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Shonen Lovers",
+  "description": "Group for fans of action-packed shonen anime",
+  "avatarUrl": "https://i.pravatar.cc/300?img=group1",
+  "createdBy": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+### 7. Get All Groups
+GET {{baseUrl}}/groups
+Authorization: Bearer {{authToken}}
+
+### 8. Get Group by ID
+GET {{baseUrl}}/groups/650e8400-e29b-41d4-a716-446655440001
+Authorization: Bearer {{authToken}}
+
+### 9. Get Groups Created by User
+GET {{baseUrl}}/groups/creator/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer {{authToken}}
+
+### 10. Update Group
+PUT {{baseUrl}}/groups/650e8400-e29b-41d4-a716-446655440001
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Shonen Enthusiasts",
+  "description": "Updated description for our group",
+  "avatarUrl": "https://i.pravatar.cc/300?img=group2"
+}
+
+### 11. Delete Group
+DELETE {{baseUrl}}/groups/650e8400-e29b-41d4-a716-446655440001
+Authorization: Bearer {{authToken}}
+
+###############################################
+# USER ACHIEVEMENTS (if implemented)
+###############################################
+
+### 12. Unlock Achievement
+POST {{baseUrl}}/achievements/unlock
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "achievementId": "first_watch"
+}
+
+### 13. Get User's Achievements
+GET {{baseUrl}}/achievements/user/550e8400-e29b-41d4-a716-446655440000
+Authorization: Bearer {{authToken}}
+
+###############################################
+# ERROR TESTING
+###############################################
+
+### 14. Test Invalid Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "wrong@example.com",
+  "password": "wrongpassword"
+}
+
+### 15. Test Unauthorized Access
+GET {{baseUrl}}/groups
+# No Authorization header - should return 401
+
+### 16. Test Invalid Group Creation
+POST {{baseUrl}}/groups
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "description": "Missing required name field"
+}
+
+### 17. Test Get Non-existent Group
+GET {{baseUrl}}/groups/99999999-9999-9999-9999-999999999999
+Authorization: Bearer {{authToken}}
