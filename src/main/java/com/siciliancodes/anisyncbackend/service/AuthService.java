@@ -1,6 +1,5 @@
 package com.siciliancodes.anisyncbackend.service;
 
-
 import com.siciliancodes.anisyncbackend.dto.request.LoginRequest;
 import com.siciliancodes.anisyncbackend.dto.request.RegisterRequest;
 import com.siciliancodes.anisyncbackend.dto.response.AuthResponse;
@@ -32,7 +31,7 @@ public class AuthService {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .passwordHash(passwordEncoder.encode(request.getPassword()))  // ✅ Already correct
                 .avatarUrl(request.getAvatarUrl())
                 .build();
 
@@ -55,8 +54,8 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        // Verify password
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        // Verify password - CHANGED: user.getPassword() → user.getPasswordHash()
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new RuntimeException("Invalid email or password");
         }
 
