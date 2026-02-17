@@ -1,6 +1,6 @@
 ### Variables
 @baseUrl = http://localhost:8080/api
-@authToken = YOUR_JWT_TOKEN_HERE
+@authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyNTM4MWRlYS1iM2ZjLTQ4NzQtYWExZS0yMWUzMzJhZTllNmYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzEzNjk0MTcsImV4cCI6MTc3MTQ1NTgxN30.VqogfzK0VKgoH627Vv2Z5z7_fCGodGWV9STejw9SL7FYMpYCMjp4YNfYDz8KDsTuSEhH9QGPOPFXkzQYnKUzwQ"
 
 ### Health Check
 GET {{baseUrl}}/
@@ -60,7 +60,7 @@ Content-Type: application/json
   "name": "Shonen Lovers",
   "description": "Group for fans of action-packed shonen anime",
   "avatarUrl": "https://i.pravatar.cc/300?img=group1",
-  "createdBy": "550e8400-e29b-41d4-a716-446655440000"
+  "createdBy": "25381dea-b3fc-4874-aa1e-21e332ae9e6f"
 }
 
 ### 7. Get All Groups
@@ -68,11 +68,11 @@ GET {{baseUrl}}/groups
 Authorization: Bearer {{authToken}}
 
 ### 8. Get Group by ID
-GET {{baseUrl}}/groups/650e8400-e29b-41d4-a716-446655440001
+GET {{baseUrl}}/groups/39b6250d-6bc3-4228-93ad-981e94b5afa5
 Authorization: Bearer {{authToken}}
 
 ### 9. Get Groups Created by User
-GET {{baseUrl}}/groups/creator/550e8400-e29b-41d4-a716-446655440000
+GET {{baseUrl}}/groups/creator/25381dea-b3fc-4874-aa1e-21e332ae9e6f
 Authorization: Bearer {{authToken}}
 
 ### 10. Update Group
@@ -100,12 +100,12 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "userId": "25381dea-b3fc-4874-aa1e-21e332ae9e6f",
   "achievementId": "first_watch"
 }
 
 ### 13. Get User's Achievements
-GET {{baseUrl}}/achievements/user/550e8400-e29b-41d4-a716-446655440000
+GET {{baseUrl}}/achievements/user/25381dea-b3fc-4874-aa1e-21e332ae9e6f
 Authorization: Bearer {{authToken}}
 
 ###############################################
