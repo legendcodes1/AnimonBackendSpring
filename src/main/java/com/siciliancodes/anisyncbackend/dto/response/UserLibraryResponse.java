@@ -15,9 +15,17 @@ public class UserLibraryResponse {
     private String type;
     private String status;
     private String animePoster;
-    private Integer rating;
+
+    // Changed from Integer to Double
+    private Double rating;
+
     private Integer episodesWatched;
     private Integer totalEpisodes;
+
+    // Add these for manga support
+    private Integer chaptersRead;
+    private Integer totalChapters;
+
     private String notes;
     private LocalDateTime addedAt;
 }

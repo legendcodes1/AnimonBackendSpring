@@ -12,51 +12,56 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_library",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "anime_id"}))
+@Table(name = "user_library")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserLibrary {  // ✅ Better name
+public class UserLibrary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // ✅ Relationship to User
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "anime_id", nullable = false, length = 50)
-    private String animeId;  // ✅ From external API (AniList)
+    @Column(name = "anime_id", nullable = false)
+    private String animeId;
 
     @Column(name = "anime_title", nullable = false)
     private String animeTitle;
 
+    @Column(name = "type", nullable = false)
+    private String type; // "anime" or "manga"
+
+    @Column(name = "status", nullable = false)
+    private String status; // "watching", "completed", etc.
+
     @Column(name = "anime_poster")
-    private String animePoster;  // ✅ URL to poster image
+    private String animePoster;
 
-    @Column(length = 10)
-    private String type;  // ✅ anime or manga
-
-    @Column(length = 20)
-    private String status;  // ✅ watching, completed, plan_to_watch, dropped
-
-    @Column
-    private Integer rating;  // ✅ 1-10 rating (nullable)
+    @Column(name = "rating")
+    private Double rating; // Changed from Integer to Double
 
     @Column(name = "episodes_watched")
-    private Integer episodesWatched = 0;  // ✅ Default 0
+    private Integer episodesWatched;
 
     @Column(name = "total_episodes")
     private Integer totalEpisodes;
 
-    @Column(columnDefinition = "TEXT")
-    private String notes;  // ✅ User's personal notes
+    @Column(name = "chapters_read")
+    private Integer chaptersRead;
+
+    @Column(name = "total_chapters")
+    private Integer totalChapters;
+
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
 
     @CreationTimestamp
-    @Column(name = "added_at", updatable = false)
+    @Column(name = "added_at")
     private LocalDateTime addedAt;
 
     @UpdateTimestamp

@@ -6,6 +6,7 @@ import lombok.Data;
 public class UpdateLibraryItemRequest {
     private String status;
     private Integer episodesWatched;
-    private Integer rating;
+    private Integer chaptersRead;
+    private Double rating;
     private String notes;
 }

@@ -1,6 +1,6 @@
 ### Variables
 @baseUrl = http://localhost:8080/api
-@authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyNTM4MWRlYS1iM2ZjLTQ4NzQtYWExZS0yMWUzMzJhZTllNmYiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzEzNjk0MTcsImV4cCI6MTc3MTQ1NTgxN30.VqogfzK0VKgoH627Vv2Z5z7_fCGodGWV9STejw9SL7FYMpYCMjp4YNfYDz8KDsTuSEhH9QGPOPFXkzQYnKUzwQ"
+@authToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2YzU5YjE3ZC03YTg4LTQ4ZTQtYTg5Yy0wYzhlOWQwMDk5ZDAiLCJlbWFpbCI6InRlc3QyQGdtYWlsLmNvbSIsImlhdCI6MTc3MzY5NjIyNCwiZXhwIjoxNzczNzgyNjI0fQ.-XK1mN5eVKhsSwC90tmTkBzyPnaYx90UFXIOre64pw_n8fH9H-3fR7BERxU14d2v1gSmXIRgbvV1oKHJfaHZ8g"
 
 ### Health Check
 GET {{baseUrl}}/
@@ -25,8 +25,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "password123"
+  "email": "test2@gmail.com",
+  "password": "test123"
 }
 
 ### 3. Get Current User Profile (needs auth)

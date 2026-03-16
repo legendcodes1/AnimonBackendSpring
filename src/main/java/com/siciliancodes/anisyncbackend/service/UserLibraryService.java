@@ -20,26 +20,41 @@ public class UserLibraryService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserLibrary addToLibrary(UUID userId, String animeId, String animeTitle,
-                                    String type, String status, String animePoster) {
-        // Check if user exists
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+    public UserLibrary addToLibrary(
+            UUID userId,
+            String animeId,
+            String animeTitle,
+            String type,
+            String status,
+            String animePoster,
+            Double rating,
+            Integer episodesWatched,
+            Integer totalEpisodes,
+            Integer chaptersRead,
+            Integer totalChapters,
+            String notes) {
 
-        // Check if already in library
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if already exists
         if (userLibraryRepository.existsByUserIdAndAnimeId(userId, animeId)) {
-            throw new IllegalArgumentException("This anime/manga is already in your library");
+            throw new RuntimeException("Item already in library");
         }
 
-        // Create library entry
         UserLibrary library = UserLibrary.builder()
                 .user(user)
                 .animeId(animeId)
                 .animeTitle(animeTitle)
-                .type(type)  // "anime" or "manga"
-                .status(status)  // "watching", "completed", etc.
+                .type(type)
+                .status(status)
                 .animePoster(animePoster)
-                .episodesWatched(0)
+                .rating(rating)
+                .episodesWatched(episodesWatched)
+                .totalEpisodes(totalEpisodes)
+                .chaptersRead(chaptersRead)
+                .totalChapters(totalChapters)
+                .notes(notes)
                 .build();
 
         return userLibraryRepository.save(library);
@@ -63,8 +78,15 @@ public class UserLibraryService {
     }
 
     @Transactional
-    public UserLibrary updateLibraryItem(UUID userId, String animeId, String status,
-                                         Integer episodesWatched, Integer rating) {
+    public UserLibrary updateLibraryItem(
+            UUID userId,
+            String animeId,
+            String status,
+            Integer episodesWatched,
+            Integer chaptersRead,
+            Double rating,
+            String notes) {
+
         UserLibrary library = getLibraryItem(userId, animeId);
 
         if (status != null) {
@@ -75,13 +97,20 @@ public class UserLibraryService {
             library.setEpisodesWatched(episodesWatched);
         }
 
+        if (chaptersRead != null) {
+            library.setChaptersRead(chaptersRead);
+        }
+
         if (rating != null) {
             library.setRating(rating);
         }
 
+        if (notes != null) {
+            library.setNotes(notes);
+        }
+
         return userLibraryRepository.save(library);
     }
-
 
     @Transactional
     public void removeFromLibrary(UUID userId, String animeId) {

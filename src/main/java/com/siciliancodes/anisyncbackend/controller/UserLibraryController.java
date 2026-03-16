@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/users/{userId}/library")  // ✅ RESTful URL structure
+@RequestMapping("/api/users/{userId}/library")
 @RequiredArgsConstructor
 public class UserLibraryController {
 
@@ -35,7 +35,13 @@ public class UserLibraryController {
                 request.getAnimeTitle(),
                 request.getType(),
                 request.getStatus(),
-                request.getAnimePoster()
+                request.getAnimePoster(),
+                request.getRating(),
+                request.getEpisodesWatched(),
+                request.getTotalEpisodes(),
+                request.getChaptersRead(),
+                request.getTotalChapters(),
+                request.getNotes()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(library));
@@ -99,7 +105,9 @@ public class UserLibraryController {
                 animeId,
                 request.getStatus(),
                 request.getEpisodesWatched(),
-                request.getRating()
+                request.getChaptersRead(),
+                request.getRating(),
+                request.getNotes()
         );
 
         return ResponseEntity.ok(mapToResponse(library));
@@ -146,6 +154,8 @@ public class UserLibraryController {
                 .rating(library.getRating())
                 .episodesWatched(library.getEpisodesWatched())
                 .totalEpisodes(library.getTotalEpisodes())
+                .chaptersRead(library.getChaptersRead())
+                .totalChapters(library.getTotalChapters())
                 .notes(library.getNotes())
                 .addedAt(library.getAddedAt())
                 .build();
