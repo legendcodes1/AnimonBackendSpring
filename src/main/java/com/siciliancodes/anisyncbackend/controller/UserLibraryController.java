@@ -29,6 +29,12 @@ public class UserLibraryController {
             @PathVariable UUID userId,
             @Valid @RequestBody AddToLibraryRequest request) {
 
+        System.out.println("Received request:");
+        System.out.println("Rating: " + request.getRating());
+        System.out.println("ChaptersRead: " + request.getChaptersRead());
+        System.out.println("EpisodesWatched: " + request.getEpisodesWatched());
+        System.out.println("Notes: " + request.getNotes());
+
         UserLibrary library = userLibraryService.addToLibrary(
                 userId,
                 request.getAnimeId(),
