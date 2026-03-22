@@ -34,17 +34,24 @@ public class GroupMemberService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
 
         // 3. Check if already a member
-        if (groupMemberRepository.existsByGroupIdAndUserId(groupId, userId)) {
+        // ✅ FIXED: Changed to correct order (userId first)
+        if (groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new IllegalArgumentException("User is already a member of this group");
         }
 
-        // 4. Check group size limit (business rule)
-        long memberCount = groupMemberRepository.countByGroupId(groupId);
-        if (memberCount >= 50) {
-            throw new IllegalArgumentException("Group is full (max 50 members)");
+        // 4. Check user's joined groups limit
+        long userJoinedCount = groupMemberRepository.countByUserId(userId);
+        if (userJoinedCount >= 50) {
+            throw new RuntimeException("Maximum joined groups limit reached (50)");
         }
 
-        // 5. Create membership
+        // 5. Check group size limit
+        long memberCount = groupMemberRepository.countByGroupId(groupId);
+        if (memberCount >= 10000) { // Changed from 50 to 10000 for group capacity
+            throw new IllegalArgumentException("Group is full (max 10,000 members)");
+        }
+
+        // 6. Create membership
         GroupMemberId memberId = new GroupMemberId(groupId, userId);
         GroupMember groupMember = GroupMember.builder()
                 .id(memberId)
@@ -58,12 +65,11 @@ public class GroupMemberService {
 
     @Transactional
     public void leaveGroup(UUID groupId, UUID userId) {
-        // Check if member exists
-        if (!groupMemberRepository.existsByGroupIdAndUserId(groupId, userId)) {
+        // ✅ FIXED: Changed to correct order
+        if (!groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new IllegalArgumentException("User is not a member of this group");
         }
 
-        // Delete membership
         groupMemberRepository.deleteByGroupIdAndUserId(groupId, userId);
     }
 
@@ -80,22 +86,20 @@ public class GroupMemberService {
     }
 
     public boolean isMember(UUID groupId, UUID userId) {
-        return groupMemberRepository.existsByGroupIdAndUserId(groupId, userId);
+        // ✅ FIXED: Changed to correct order
+        return groupMemberRepository.existsByUserIdAndGroupId(userId, groupId);
     }
 
     @Transactional
     public GroupMember updateRole(UUID groupId, UUID userId, String newRole) {
-        // Get membership
         GroupMemberId memberId = new GroupMemberId(groupId, userId);
         GroupMember member = groupMemberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
-        // Validate role
         if (!newRole.equals("admin") && !newRole.equals("moderator") && !newRole.equals("member")) {
             throw new IllegalArgumentException("Invalid role. Must be: admin, moderator, or member");
         }
 
-        // Update role
         member.setRole(newRole);
         return groupMemberRepository.save(member);
     }

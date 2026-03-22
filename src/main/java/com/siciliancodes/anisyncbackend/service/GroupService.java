@@ -17,7 +17,7 @@ import java.util.UUID;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;  //  Need this to get User
+    private final UserRepository userRepository;
 
     @Transactional
     public Group createGroup(String name, String description, String avatarUrl, UUID createdByUserId) {
@@ -25,6 +25,11 @@ public class GroupService {
             throw new IllegalArgumentException("Group name already exists: " + name);
         }
 
+        // ✅ FIXED: Use createdByUserId instead of createdBy
+        long userGroupCount = groupRepository.countByCreatedById(createdByUserId);
+        if (userGroupCount >= 10) {
+            throw new RuntimeException("Maximum group creation limit reached (10)");
+        }
 
         User createdBy = userRepository.findById(createdByUserId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + createdByUserId));
@@ -61,9 +66,7 @@ public class GroupService {
     public Group updateGroup(UUID groupId, String name, String description, String avatarUrl) {
         Group group = getGroupById(groupId);
 
-        // Update only non-null fields
         if (name != null && !name.equals(group.getName())) {
-            // Check if new name already exists
             if (groupRepository.existsByName(name)) {
                 throw new IllegalArgumentException("Group name already exists: " + name);
             }

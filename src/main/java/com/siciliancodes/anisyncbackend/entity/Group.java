@@ -32,7 +32,7 @@ public class Group {
     @Column(columnDefinition = "TEXT")
     private String description;  // ✅ Added description
 
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", columnDefinition = "TEXT")  // ✅ BEST - Unlimited
     private String avatarUrl;  // ✅ Camel case
 
     @ManyToOne(fetch = FetchType.LAZY)  // ✅ Who created the group
