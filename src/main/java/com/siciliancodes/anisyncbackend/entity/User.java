@@ -1,12 +1,10 @@
 package com.siciliancodes.anisyncbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import lombok.AllArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,7 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Data                    // Lombok: generates getters, setters, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor       // Lombok: no-arg constructor for JPA
 @AllArgsConstructor      // Lombok: all-args constructor
 @Builder

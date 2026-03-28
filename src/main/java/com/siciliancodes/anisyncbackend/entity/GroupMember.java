@@ -1,21 +1,19 @@
 package com.siciliancodes.anisyncbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 
 
-@Entity
-@Table(name = "group_members")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
+@Table(name = "group_members")
 public class GroupMember {
 
     @EmbeddedId  // ✅ Composite primary key

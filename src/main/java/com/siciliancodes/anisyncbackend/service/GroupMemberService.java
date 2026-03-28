@@ -1,5 +1,6 @@
 package com.siciliancodes.anisyncbackend.service;
 
+import com.siciliancodes.anisyncbackend.dto.GroupMemberDTO;
 import com.siciliancodes.anisyncbackend.entity.Group;
 import com.siciliancodes.anisyncbackend.entity.GroupMember;
 import com.siciliancodes.anisyncbackend.entity.GroupMemberId;
@@ -24,7 +25,7 @@ public class GroupMemberService {
     private final UserRepository userRepository;
 
     @Transactional
-    public GroupMember joinGroup(UUID groupId, UUID userId) {
+    public GroupMemberDTO joinGroup(UUID groupId, UUID userId)  {
         // 1. Get group
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Group not found: " + groupId));
@@ -34,7 +35,6 @@ public class GroupMemberService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
 
         // 3. Check if already a member
-        // ✅ FIXED: Changed to correct order (userId first)
         if (groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new IllegalArgumentException("User is already a member of this group");
         }
@@ -59,13 +59,17 @@ public class GroupMemberService {
                 .user(user)
                 .role("member")  // Default role
                 .build();
+        GroupMember saved = groupMemberRepository.save(groupMember);
 
-        return groupMemberRepository.save(groupMember);
+        return new GroupMemberDTO(
+                saved.getId().getGroupId(),
+                saved.getId().getUserId(),
+                saved.getRole()
+        );
     }
 
     @Transactional
     public void leaveGroup(UUID groupId, UUID userId) {
-        // ✅ FIXED: Changed to correct order
         if (!groupMemberRepository.existsByUserIdAndGroupId(userId, groupId)) {
             throw new IllegalArgumentException("User is not a member of this group");
         }
@@ -73,8 +77,15 @@ public class GroupMemberService {
         groupMemberRepository.deleteByGroupIdAndUserId(groupId, userId);
     }
 
-    public List<GroupMember> getGroupMembers(UUID groupId) {
-        return groupMemberRepository.findByGroupId(groupId);
+    public List<GroupMemberDTO> getGroupMembers(UUID groupId) {
+        return groupMemberRepository.findByGroupId(groupId)
+                .stream()
+                .map(member -> new GroupMemberDTO(
+                        member.getId().getGroupId(),
+                        member.getId().getUserId(),
+                        member.getRole()
+                ))
+                .toList();
     }
 
     public List<GroupMember> getUserGroups(UUID userId) {
@@ -86,12 +97,11 @@ public class GroupMemberService {
     }
 
     public boolean isMember(UUID groupId, UUID userId) {
-        // ✅ FIXED: Changed to correct order
         return groupMemberRepository.existsByUserIdAndGroupId(userId, groupId);
     }
 
     @Transactional
-    public GroupMember updateRole(UUID groupId, UUID userId, String newRole) {
+    public GroupMemberDTO updateRole(UUID groupId, UUID userId, String newRole) {
         GroupMemberId memberId = new GroupMemberId(groupId, userId);
         GroupMember member = groupMemberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
@@ -101,6 +111,6 @@ public class GroupMemberService {
         }
 
         member.setRole(newRole);
-        return groupMemberRepository.save(member);
+        return new GroupMemberDTO(groupId, userId, newRole);
     }
 }
